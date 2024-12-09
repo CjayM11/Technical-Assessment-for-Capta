@@ -1,0 +1,37 @@
+[
+  {
+    "userId": "502",
+    "name": "Matthew Best",
+    "email": "vthomas@example.com",
+    "password": ")(PFJH2db5",
+    "role": "user"
+  },
+  {
+    "userId": "513",
+    "name": "Brian Williams",
+    "email": "melissa52@example.com",
+    "password": ")GJmHTvlT2",
+    "role": "user"
+  },
+  {
+    "userId": "776",
+    "name": "Jamie Casey",
+    "email": "qwilliams@example.org",
+    "password": "16WrBPef!T",
+    "role": "user"
+  },
+  {
+    "userId": "822",
+    "name": "Wendy Smith",
+    "email": "wsmith@example.org",
+    "password": "%(E2YpozPe",
+    "role": "user"
+  },
+  {
+    "userId": "998",
+    "name": "Austin Reynolds",
+    "email": "dbrown@example.com",
+    "password": "Fq55ZiU^+e",
+    "role": "user"
+  }
+]
