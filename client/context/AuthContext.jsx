@@ -6,7 +6,7 @@ const CartContext = createContext();
 export const useAuth = () => useContext(AuthContext);
 export const useCart = () => useContext(CartContext);
 
-
+//get user info from token 
 const decodeJwt = (token) => {
 
   if (!token) {
@@ -14,7 +14,7 @@ const decodeJwt = (token) => {
     return null;
   }
 
-  // Split the token into its parts: [header, payload, signature]
+  // Split token :  [header, payload, signature]
   const tokenParts = token.split('.');
   if (tokenParts.length !== 3) {
     console.error('Invalid token format');
@@ -22,14 +22,13 @@ const decodeJwt = (token) => {
   }
 
   const base64Url = tokenParts[1];
-  const base64 = base64Url.replace('-', '+').replace('_', '/');  // URL safe base64 decode
+  const base64 = base64Url.replace('-', '+').replace('_', '/');
 
   try {
-    // Decode the payload
     const decodedPayload = JSON.parse(window.atob(base64));
 
-    // Optionally: Check if the token has expired (if `exp` is available)
-    const currentTime = Math.floor(Date.now() / 1000);  // Current timestamp in seconds
+    // Check expiration 
+    const currentTime = Math.floor(Date.now() / 1000);  // in seconds
     if (decodedPayload.exp && decodedPayload.exp < currentTime) {
       console.error('Token has expired');
       return null;
@@ -47,50 +46,51 @@ export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(sessionStorage.getItem('token'));
 
   useEffect(() => {
-  if (token) {
+    if (token) {
       const decodedUser = decodeJwt(token);
       if (decodedUser) {
-          setUser(decodedUser);
+        setUser(decodedUser);
       }
-  }
-}, [token]);
+    }
+  }, [token]);
 
   const login = (userData) => {
-    console.log("User logged in:", userData); // Log the user data during login
-    setUser(userData.user);  // Set the user state with the user object
-    sessionStorage.setItem('token', userData.token); // Store the token in sessionStorage
-    setToken(userData.token);  // Update the token state
-};
+    console.log("User logged in:", userData);
+    setUser(userData.user);
+    sessionStorage.setItem('token', userData.token);
+    setToken(userData.token);
+  };
 
 
   const logout = () => {
     setUser(null);
-    sessionStorage.removeItem('token'); // Remove the token to forget the session
-    console.log("User logged out"); // Optionally log out message
+    sessionStorage.removeItem('token');
+    console.log("User logged out");
   };
 
 
   return (
-    <AuthContext.Provider value={{ user, login,logout,token }}>
+    <AuthContext.Provider value={{ user, login, logout, token }}>
       {children}
     </AuthContext.Provider>
   );
 };
 
+// didnt work out TODO : remove later
 export const CartProvider = ({ children }) => {
   const [cart, setCart] = useState([]);
 
   const updateCart = (product) => {
-      setCart((prevCart) => [...prevCart, product]); // Update the cart state
+    setCart((prevCart) => [...prevCart, product]);
   };
 
   const removeFromCart = (productId) => {
-      setCart((prevCart) => prevCart.filter((item) => item.productId !== productId));
+    setCart((prevCart) => prevCart.filter((item) => item.productId !== productId));
   };
 
   return (
-      <CartContext.Provider value={{ cart, updateCart, removeFromCart }}>
-          {children}
-      </CartContext.Provider>
+    <CartContext.Provider value={{ cart, updateCart, removeFromCart }}>
+      {children}
+    </CartContext.Provider>
   );
 };

@@ -5,16 +5,18 @@ const LoginForm = ({ onLoginSuccess, setErrorMessage }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const { login } = useAuth();
-  
+
   const handleSubmit = async (e) => {
 
-    e.preventDefault(); // Prevent form from refreshing the page
+    e.preventDefault();
 
-    // Send login request to backend
+    // Send login request 
     const result = await loginUser(email, password);
 
     if (result.success) {
-      onLoginSuccess(); // Notify parent component of successful login
+      // send success
+      onLoginSuccess();
+      //login from authContext
       login({ user: result.user, token: result.token });
     } else {
       setErrorMessage(result.message || 'Login failed'); // Handle error

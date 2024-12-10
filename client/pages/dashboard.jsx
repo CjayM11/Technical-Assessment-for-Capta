@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import '../src/index.css'
 const DashboardPage = () => {
-  // State to track the active menu item
+
   const [activeMenuItem, setActiveMenuItem] = useState('settings');
   const [selectedOption, setSelectedOption] = useState('');
   const [orders, setOrders] = useState([]);
@@ -177,7 +177,7 @@ const DashboardPage = () => {
                   </ul>
                 </div>
                 <div className="p-6">
-                  {/* Conditional rendering based on active menu item */}
+                  {/* content */}
                   {activeMenuItem === 'settings' && (
                     <div>
                       <h2 className="text-2xl font-bold">Settings</h2>

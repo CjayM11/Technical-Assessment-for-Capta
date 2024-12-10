@@ -12,7 +12,7 @@ function App() {
     <AuthProvider>
       <CartProvider>
       <Router>
-        <div className="app ">
+        <div className="app">
           <Navbar />
           <Routes>
             <Route path="/" element={<LoginPage />} />

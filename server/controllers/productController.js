@@ -4,7 +4,7 @@ const Order = require('../models/orders');
 const getProducts = async (req, res) => {
   try {
 
-    const limit = parseInt(req.query.limit) || 10;
+    const limit = parseInt(req.query.limit) || 10; // ( limit to 10 for test - TODO : Pagnation)
     const products = await Product.find().limit(limit);
 
     res.status(200).json(products);
@@ -14,6 +14,7 @@ const getProducts = async (req, res) => {
   }
 };
 
+// TODO : Alot
 const getOrders = async (req, res) => {
   try {
     const orders = await Order.find()

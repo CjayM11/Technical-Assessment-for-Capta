@@ -1,8 +1,8 @@
-const shoppingCart = require('../models/shopping_cart'); // Path to your shopping cart model
+const shoppingCart = require('../models/shopping_cart');
 
 const getCart = async (req, res) => {
     try {
-        const userId = req.params.userId;  // This is pulling the userId from the URL params
+        const userId = req.params.userId; 
         if (!userId) {
             return res.status(400).json({ message: 'UserId is required' });
         }
@@ -16,10 +16,10 @@ const getCart = async (req, res) => {
     }
 };
 
-  const addToCart = async (req, res) => {
+const addToCart = async (req, res) => {
     try {
         const { productId, userId, quantity } = req.body;
-    
+
         // Check if the product already exists in the cart for the user
         let cartItem = await shoppingCart.findOne({ productId, userId });
 
@@ -29,7 +29,7 @@ const getCart = async (req, res) => {
             await cartItem.save();
             return res.status(200).json({ message: 'Product quantity updated', cartItem });
         } else {
-            // If the product doesn't exist, create a new cart item
+            // If product doesnt exist , create new 
             const newCartItem = new shoppingCart({
                 userId,
                 productId,
@@ -43,7 +43,7 @@ const getCart = async (req, res) => {
                 console.error('Save error:', error);
                 return res.status(500).json({ message: 'Failed to add product to cart' });
             }
-            
+
             return res.status(201).json({ message: 'Product added to cart', newCartItem });
         }
     } catch (error) {
@@ -54,26 +54,25 @@ const getCart = async (req, res) => {
 
 const removeFromCart = async (req, res) => {
     try {
-        const { userId, productId } = req.params; // Extract userId and productId from URL parameters
+        const { userId, productId } = req.params;
 
-        // Find the cart item for the specified user and product
+        // Find item
         const cartItem = await shoppingCart.findOne({ userId: userId, productId: productId });
 
-        // If the item exists in the cart
+    
         if (cartItem) {
-            // If quantity is greater than 1, decrease the quantity by 1
+            // Reduce quantity ( TODO : fix addition of quantity )
             if (cartItem.quantity > 1) {
                 cartItem.quantity -= 1;
                 await cartItem.save(); // Save the updated cart item
                 return res.status(200).json({ message: 'Product quantity decreased by 1' });
-            } 
-            // If quantity is 1, remove the product from the cart
+            }
+            // Remove if its less then 1
             else {
                 await shoppingCart.deleteOne({ userId: userId, productId: productId });
                 return res.status(200).json({ message: 'Product removed from cart' });
             }
         } else {
-            // If the product doesn't exist in the cart for the user
             return res.status(404).json({ message: 'Product not found in cart' });
         }
     } catch (error) {
@@ -82,4 +81,4 @@ const removeFromCart = async (req, res) => {
     }
 };
 
-module.exports = { getCart,addToCart,removeFromCart };
+module.exports = { getCart, addToCart, removeFromCart };

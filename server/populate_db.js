@@ -12,15 +12,10 @@ async function importUsers() {
     try {
             //Find users.json file in db_backup
         const data = fs.readFileSync(path.join(__dirname, 'db_backup', 'users.json'), 'utf-8');
-            //Find imports folder
         const importsFolder = path.join(__dirname, 'imports');
-            // Fetch users
         const users = JSON.parse(data);
-            // array to hold filter emails
         const uniqueUsers = [];
-            // array to hold duplicate emails
         const duplicateUsers = [];
-            // track emails 
         const seenEmails = new Set();
 
             //loop through users 
@@ -123,7 +118,7 @@ async function importAllCollections() {
     } catch (error) {
         console.error('Error during import process:', error);
     } finally {
-        mongoose.connection.close();  // Ensure database connection is closed after imports are done
+        mongoose.connection.close();
     }
 }
 

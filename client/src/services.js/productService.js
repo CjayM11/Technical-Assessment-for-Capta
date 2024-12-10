@@ -1,5 +1,6 @@
 import axios from 'axios';
 
+// get products
 const getProducts = async () => {
     try {
         // Send a GET request to fetch all products
@@ -17,9 +18,10 @@ const getProducts = async () => {
     }
 };
 
+
+// get orders for users ( order history )
 const getOrders = async () => {
     try {
-        // Send a GET request to fetch all products
         const response = await axios.get('http://localhost:8080/api/users/orders');
         const data = response.data;
 
@@ -34,4 +36,4 @@ const getOrders = async () => {
     }
 };
 
-export default {getProducts,getOrders};
+export default { getProducts, getOrders };

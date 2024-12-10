@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import NavbarMenu from '../components/navbar';
 import ProductCard from '../components/product_card_shop';
-import getProducts from '../src/services.js/productService';
+import productService from '../src/services.js/productService';
 
 const Shop = () => {
   const [products, setProducts] = useState([]);
@@ -15,12 +15,14 @@ const Shop = () => {
 
   useEffect(() => {
     const fetchProducts = async () => {
-      const response = await getProducts();
+      const response = await productService.getProducts();
+
       if (response.success) {
         setProducts(response.products);
       } else {
         console.error(response.message);
       }
+
       setIsLoading(false);
     };
 
@@ -36,7 +38,7 @@ const Shop = () => {
         {/* Main layout with filter on the left and products on the right */}
         <div className="flex ">
 
-          {/* Filter Section (Left side) */}
+          {/* Left side */}
           <div className="bg-base-200 rounded-lg shadow-md p-4 ml-10 mt-8 mr-10">
             <h2 className="text-xl font-bold mb-2">Filters</h2>
             {/* Price Filter */}
@@ -146,10 +148,10 @@ const Shop = () => {
             </button>
           </div>
 
-          {/* Products Section (Right side) */}
+          {/* Right side */}
           <div className="flex-1">
             {isLoading ? (
-              <p>Loading products...</p>
+              <p className='p-2 bg-base-200'>Loading products...</p>
             ) : (
               <div className="w-full mt-8">
                 <div className="grid grid-cols-3 gap-2">

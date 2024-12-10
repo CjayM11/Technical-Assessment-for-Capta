@@ -10,26 +10,28 @@ const NavbarMenu = () => {
     const [cartItems, setCartItems] = useState([]);
     const [errorMessage, setErrorMessage] = useState('');
 
+    //authenticate user
     useEffect(() => {
         const token = sessionStorage.getItem('token');
         if (token) {
+            //authorised
             setIsAuthenticated(true);
         } else {
+            //back to login
             setIsAuthenticated(false);
-
             navigate('/');
         }
     }, [navigate]);
 
-
+    //get cart for mini-card for user
     useEffect(() => {
         const fetchCart = async () => {
             if (user?.userId) {
-                console.log('User object:', user); // Check if user is properly set
-                console.log('User ID:', user.userId);  // Check if user.id is available
-    
+                console.log('User object:', user);
+                console.log('User ID:', user.userId);
+
                 const response = await getCart(user.userId);
-    
+
                 if (response.success) {
                     setCartItems(response.cart);
                 } else {
@@ -39,10 +41,10 @@ const NavbarMenu = () => {
                 console.log('User ID is not available or user is null');
             }
         };
-    
+
         fetchCart();
     }, [user]);
-    
+
 
     const handleLogout = () => {
         logout();
@@ -53,7 +55,7 @@ const NavbarMenu = () => {
         return cartItems.reduce((total, item) => total + item.productId.price * item.quantity, 0);
     };
     if (!isAuthenticated) {
-        return null; // Return null or a message indicating that the user is not authorized
+        return null;
     }
     return (
         <>
@@ -84,7 +86,7 @@ const NavbarMenu = () => {
                             <ul className="menu menu-horizontal w-full">
                                 <li><Link to="/dashboard">Home</Link></li>
                                 <li><Link to="/shop">Products</Link></li>
-                                <li><a>Community</a></li>
+                                <li><a>Admin</a></li>
                             </ul>
                         </div>
                         <div className="navbar-end">
@@ -164,13 +166,13 @@ const NavbarMenu = () => {
                             </div>
                         </div>
                     </div>
-                    {/* Page content here */}
+
 
                 </div>
                 <div className="drawer-side">
                     <label htmlFor="my-drawer-3" aria-label="close sidebar" className="drawer-overlay"></label>
                     <ul className="menu bg-base-200 min-h-full w-80 p-4">
-                        {/* Sidebar content here */}
+
                         <li><a>Sidebar Item 1</a></li>
                         <li><a>Sidebar Item 2</a></li>
                     </ul>

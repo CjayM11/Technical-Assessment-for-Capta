@@ -1,5 +1,7 @@
 import axios from 'axios';
 
+
+//login
 const loginUser = async (email, password) => {
     const userData = { email, password };
 
@@ -19,7 +21,7 @@ const loginUser = async (email, password) => {
     }
 };
 
-
+//Register
 const RegisterUser = async (email, name, password, role) => {
     const userData = { name, email, password, role };
 
@@ -38,4 +40,4 @@ const RegisterUser = async (email, name, password, role) => {
     }
 };
 
-export { loginUser,RegisterUser };
+export { loginUser, RegisterUser };

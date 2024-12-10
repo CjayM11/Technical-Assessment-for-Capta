@@ -1,5 +1,6 @@
 import axios from 'axios';
 
+// get shopping cart for user
 const getCart = async (userId) => {
     try {
         const response = await axios.get(`http://localhost:8080/api/users/cart/${userId}`);
@@ -14,6 +15,7 @@ const getCart = async (userId) => {
     }
 };
 
+// add to user cart
 const addToCart = async (userId, productId, quantity) => {
     try {
         const response = await axios.post('http://localhost:8080/api/users/cart/add', {
@@ -31,13 +33,15 @@ const addToCart = async (userId, productId, quantity) => {
         console.error('Error adding product to cart:', err);
         return { success: false, message: 'An error occurred. Please try again.' };
     }
-    
+
 };
 
-const removeCartItem  = async (userId, productId) => {
+
+//remove from user cart ( delete )
+const removeCartItem = async (userId, productId) => {
     try {
         const response = await axios.delete(`http://localhost:8080/api/users/cart/remove/${userId}/${productId}`);
-        
+
         if (response.status === 200) {
             return { success: true, message: response.data.message };
         } else {
@@ -50,4 +54,4 @@ const removeCartItem  = async (userId, productId) => {
 };
 
 
-export { getCart,addToCart,removeCartItem };
+export { getCart, addToCart, removeCartItem };
