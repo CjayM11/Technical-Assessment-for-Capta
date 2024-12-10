@@ -8,7 +8,7 @@ const SignUpPage = () => {
 
   const handleRegistrationSuccess = () => {
     console.log({message:"hande reg successs - trying to nav"});
-    navigate('/');  // Redirect to the dashboard on successful registration
+    navigate('/dashboard');  // Redirect to the dashboard on successful registration
   };
   
 //TODO: not navigating to dash after login 

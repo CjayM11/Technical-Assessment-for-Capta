@@ -11,12 +11,13 @@ const shoppingCartSchema = new mongoose.Schema({
     },
     productId: {
         type: mongoose.Schema.Types.String,
-        ref: 'products',
+        ref: 'Product',
         required: true,
     },
     quantity: {
-        type: Number,
+        type: String,
         required: true,
+        default: 1,
     }
 });
 

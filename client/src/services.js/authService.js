@@ -6,9 +6,10 @@ const loginUser = async (email, password) => {
     try {
         const response = await axios.post('http://localhost:8080/api/users/login', userData);
         const data = response.data;
-
+        console.log('API Response:', data);
         if (response.status === 200) {
-            return { success: true, token: data.token };
+            return { success: true, user: data.user, token: data.token };
+
         } else {
             return { success: false, message: data.message };
         }
@@ -17,6 +18,7 @@ const loginUser = async (email, password) => {
         return { success: false, message: 'An error occurred. Please try again.' };
     }
 };
+
 
 const RegisterUser = async (email, name, password, role) => {
     const userData = { name, email, password, role };

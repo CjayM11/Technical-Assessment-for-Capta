@@ -1,22 +1,29 @@
-import { useState } from 'react';
+import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import LoginPage from '../pages/login';  // Import the LoginPage component
-import Dashboard from '../pages/dashboard';  // Import the LoginPage component
-import Signup from '../pages/signup';  // Import the LoginPage component
-
+import { AuthProvider, CartProvider } from '../context/authContext';
+import LoginPage from '../pages/login';
+import Dashboard from '../pages/dashboard';
+import Signup from '../pages/signup';
+import Shop from '../pages/shop';
+import Navbar from '../components/navbar';
 
 function App() {
   return (
-    <Router>
-      <div className="app">
-        <Routes>
-          {/* Define routes here */}
-          <Route path="/" element={<LoginPage />} /> {/* Default route - Login Page */}
-          <Route path="/dashboard" element={<Dashboard />} /> {/* Home page route */}
-          <Route path="/signup" element={<Signup />} /> {/* Register page route */}
-        </Routes>
-      </div>
-    </Router>
+    <AuthProvider>
+      <CartProvider>
+      <Router>
+        <div className="app ">
+          <Navbar />
+          <Routes>
+            <Route path="/" element={<LoginPage />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/signup" element={<Signup />} />
+            <Route path="/shop" element={<Shop />} />
+          </Routes>
+        </div>
+      </Router>
+      </CartProvider>
+    </AuthProvider>
   );
 }
 

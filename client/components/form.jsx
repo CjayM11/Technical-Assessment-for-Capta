@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { loginUser } from '../src/services.js/authService';
-
+import { useAuth } from '../context/authContext';
 const LoginForm = ({ onLoginSuccess, setErrorMessage }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-
+  const { login } = useAuth();
+  
   const handleSubmit = async (e) => {
+
     e.preventDefault(); // Prevent form from refreshing the page
 
     // Send login request to backend
@@ -13,6 +15,7 @@ const LoginForm = ({ onLoginSuccess, setErrorMessage }) => {
 
     if (result.success) {
       onLoginSuccess(); // Notify parent component of successful login
+      login({ user: result.user, token: result.token });
     } else {
       setErrorMessage(result.message || 'Login failed'); // Handle error
     }

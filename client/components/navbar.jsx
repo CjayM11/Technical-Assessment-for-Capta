@@ -1,16 +1,67 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/authContext'
+import { getCart } from '../src/services.js/addToCartService';
+
+const NavbarMenu = () => {
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const navigate = useNavigate();
+    const { user, logout } = useAuth();
+    const [cartItems, setCartItems] = useState([]);
+    const [errorMessage, setErrorMessage] = useState('');
+
+    useEffect(() => {
+        const token = sessionStorage.getItem('token');
+        if (token) {
+            setIsAuthenticated(true);
+        } else {
+            setIsAuthenticated(false);
+
+            navigate('/');
+        }
+    }, [navigate]);
 
 
-const navbarMenu = () => {
+    useEffect(() => {
+        const fetchCart = async () => {
+            if (user?.userId) {
+                console.log('User object:', user); // Check if user is properly set
+                console.log('User ID:', user.userId);  // Check if user.id is available
+    
+                const response = await getCart(user.userId);
+    
+                if (response.success) {
+                    setCartItems(response.cart);
+                } else {
+                    setErrorMessage(response.message);
+                }
+            } else {
+                console.log('User ID is not available or user is null');
+            }
+        };
+    
+        fetchCart();
+    }, [user]);
+    
 
-    const UserName = ""
+    const handleLogout = () => {
+        logout();
+        navigate('/');
+    };
+
+    const calculateSubtotal = () => {
+        return cartItems.reduce((total, item) => total + item.productId.price * item.quantity, 0);
+    };
+    if (!isAuthenticated) {
+        return null; // Return null or a message indicating that the user is not authorized
+    }
     return (
         <>
             <div className="drawer">
                 <input id="my-drawer-3" type="checkbox" className="drawer-toggle" />
                 <div className="drawer-content flex flex-col">
                     {/* Navbar */}
-                    <div className="navbar bg-base-300 w-full fixed top-0">
+                    <div className="navbar bg-base-300 w-full fixed top-0 ">
                         <div className="flex-none lg:hidden">
                             <label htmlFor="my-drawer-3" aria-label="open sidebar" className="btn btn-square btn-ghost">
                                 <svg
@@ -27,16 +78,16 @@ const navbarMenu = () => {
                             </label>
                         </div>
                         <div className="navbar-start">
-                            <div className="mx-2 flex-1 px-2">Welcome UserName</div>
+                            <div className="mx-2 flex-1 px-2">Welcome userName</div>
                         </div>
                         <div className="navbar-center">
                             <ul className="menu menu-horizontal w-full">
-                                <li><a>Home</a></li>
-                                <li><a>Products</a></li>
+                                <li><Link to="/dashboard">Home</Link></li>
+                                <li><Link to="/shop">Products</Link></li>
                                 <li><a>Community</a></li>
                             </ul>
                         </div>
-                        <div className='navbar-end'>
+                        <div className="navbar-end">
                             <div className="dropdown dropdown-end">
                                 <div tabIndex={0} role="button" className="btn btn-ghost btn-circle">
                                     <div className="indicator">
@@ -52,18 +103,48 @@ const navbarMenu = () => {
                                                 strokeWidth="2"
                                                 d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
                                         </svg>
-                                        <span className="badge badge-sm indicator-item">8</span>
+                                        <span className="badge badge-sm indicator-item">{cartItems.length}</span>
                                     </div>
                                 </div>
                                 <div
                                     tabIndex={0}
-                                    className="card card-compact dropdown-content bg-base-100 z-[1] mt-3 w-52 shadow">
+                                    className="card card-compact dropdown-content bg-base-100 z-40 mt-3 w-fit shadow">
                                     <div className="card-body">
-                                        <span className="text-lg font-bold">8 Items</span>
-                                        <span className="text-info">Subtotal: $999</span>
-                                        <div className="card-actions">
-                                            <button className="btn btn-primary btn-block">View cart</button>
-                                        </div>
+                                        {cartItems.length === 0 ? (
+                                            <p>Your cart is empty</p>
+                                        ) : (
+                                            <>
+                                                <table className="table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th></th>
+                                                            <th></th>
+                                                            <th></th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        {cartItems.map((item) => (
+                                                            <tr key={item._id}>
+                                                                <td>{item.productId.name}</td>
+                                                                <td>{item.quantity}</td>
+                                                                <td>
+                                                                    <button
+                                                                        className="btn btn-error btn-sm"
+                                                                        onClick={() => handleRemoveFromCart(item._id)}
+                                                                    >
+                                                                        Remove
+                                                                    </button>
+                                                                </td>
+                                                            </tr>
+                                                        ))}
+                                                    </tbody>
+                                                </table>
+                                                <span className="text-info">Subtotal: ${calculateSubtotal()}</span>
+                                                <div className="card-actions">
+                                                    <button className="btn btn-primary btn-block">View cart</button>
+                                                </div>
+                                            </>
+                                        )}
                                     </div>
                                 </div>
                             </div>
@@ -78,10 +159,9 @@ const navbarMenu = () => {
                                 <ul
                                     tabIndex={0}
                                     className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
-                                    <li><a>Logout</a></li>
+                                    <li><a onClick={handleLogout}>Logout</a></li>
                                 </ul>
                             </div>
-
                         </div>
                     </div>
                     {/* Page content here */}
@@ -97,7 +177,7 @@ const navbarMenu = () => {
                 </div>
             </div>
         </>
-    )
-}
+    );
+};
 
-export default navbarMenu;
+export default NavbarMenu;

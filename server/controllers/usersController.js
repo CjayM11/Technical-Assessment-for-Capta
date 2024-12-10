@@ -1,6 +1,6 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const User = require('../models/users'); // Ensure 'User' is capitalized
+const User = require('../models/users');
 
 //login Authentication
 const loginUser = async (req, res) => {
@@ -20,15 +20,26 @@ const loginUser = async (req, res) => {
         }
 
         // Generate JWT token
-        const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+        const token = jwt.sign({ userId: user.userId }, process.env.JWT_SECRET, { expiresIn: '1h' });
+        console.log("Generated Token:", token); 
+        
+        const userData = {
+            userId: user.userId,
+            name: user.name,
+            email: user.email,
+        };
 
-        // Send token back
-        res.status(200).json({ message: "Login successful", token });
+        res.status(200).json({
+            message: "Login successful",
+            user: userData, 
+            token: token,    
+        });
 
     } catch (error) {
         res.status(500).json({ message: "An error occurred", error });
     }
 };
+
 
 //Create and login user
 const RegisterUser = async (req, res) => {
@@ -47,13 +58,13 @@ const RegisterUser = async (req, res) => {
 
         // If no users exist, start with 1, else increment the highest userId by 1
         if (lastUser) {
-            console.log(`Last userId: ${lastUser.userId}`); // Debugging line to check lastUser's userId
+            console.log(`Last userId: ${lastUser.userId}`); 
             newUserId = parseInt(lastUser.userId) + 1;
         } else {
-            newUserId = 1; // Start with 1 if there are no users
+            newUserId = 1; 
         }
 
-        console.log(`Generated new userId: ${newUserId}`); // Debugging line to check generated userId
+        console.log(`Generated new userId: ${newUserId}`); 
 
         // Check if new userId already exists
         let userWithSameId = await User.findOne({ userId: newUserId.toString() });
